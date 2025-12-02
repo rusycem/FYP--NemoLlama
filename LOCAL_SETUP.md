@@ -50,7 +50,7 @@ Due to licensing and size restrictions, the model files are **not included in th
 
 ### Required Models
 
-Inside the folder `ExternalDependencies/tts_en_multispeaker_fastpitchhifigan/`, place the following files:
+Inside the folder `path/tts_en_multispeaker_fastpitchhifigan/`, place the following files:
 
 1. `tts_en_fastpitch_multispeaker.nemo`  
 2. `tts_en_hifitts_hifigan_ft_fastpitch.nemo`
