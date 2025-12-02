@@ -8,6 +8,7 @@
 ![UE5](https://img.shields.io/badge/Engine-Unreal%20Engine%205.4-blue?logo=unrealengine)
 ![Python](https://img.shields.io/badge/Python-3.13-yellow?logo=python)
 ![NVIDIA](https://img.shields.io/badge/NVIDIA-ACE%20%7C%20NeMo-green?logo=nvidia)
+![Ollama](https://img.shields.io/badge/Ollama-Llama%203.2-pink?logo=ollama)
 ![License](https://img.shields.io/badge/Status-Prototype-orange)
 
 </div>
