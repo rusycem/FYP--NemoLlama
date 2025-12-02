@@ -36,11 +36,11 @@ Some components are not included in the main repo due to size or licensing restr
 You can download and extract them into the `ExternalDependencies` folder.
 
 1. **NeMo TTS Models**  
-   - File: `tts_models.7z`  
+   - File: `tts_en_multispeaker_fastpitchhifigan.7z`  
    - Path after extraction: `ExternalDependencies/tts_en_multispeaker_fastpitchhifigan/`  
 
 2. **Custom Ollama Character Models**  
-   - File: `custom_models.7z`  
+   - File: `modelfile.7z`  
    - Path after extraction: `ExternalDependencies/Modelfile/`
   
 ## ⚙️ Downloading NVIDIA NeMo TTS Models
