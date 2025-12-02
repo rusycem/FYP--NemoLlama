@@ -1,60 +1,188 @@
 # DYNAMIC AI-DRIVEN NPCS WITH REAL-TIME ADAPTIVE CONVERSATIONS IN UNREAL ENGINE 5
-## Abstract
 
-This project presents a practical, semi-offline 
-pipeline for dynamic, AI-driven Non-Playable Characters (NPCs) 
-implemented in Unreal Engine 5. Motivated by concerns over 
-latency, cloud dependency, and user privacy inherent in fully 
-cloud-hosted conversational platforms, the project integrates local 
-and evaluation-licensed components to enable near real-time 
-conversational interaction and expressive facial animation. The 
-architecture pairs an on-premises Ollama-hosted LLaMA 3.2 
-model for natural language generation, NVIDIA NeMo FastPitch 
-for local text-to-speech synthesis, and NVIDIA ACE Audio2Face 
-for facial animation. Development followed an iterative Game 
-Development Life Cycle (GDLC) with prototype builds, asset 
-integration using MetaHuman characters, and functionality 
-testing. The resulting UE5 prototype processes player dialogue, 
-synthesizes speech, and drives facial expressions in near real-time, 
-demonstrating reduced reliance on external cloud services while 
-highlighting remaining constraints—most notably Audio2Face’s 
-dependence on NVIDIA’s evaluation ecosystem. Evaluation shows 
-that text generation and speech synthesis can be achieved fully 
-offline, whereas high-fidelity facial animation currently requires 
-vendor-tied tooling. This work contributes a feasible hybrid 
-workflow that balances immersion, privacy, and creative control, 
-and it outlines future directions toward fully local facial 
-animation, latency optimization, quantitative user-experience 
-assessment, and broader adoption in interactive storytelling.
+> **Offline / Hybrid AI Pipeline for Fully Reactive NPC Dialogue, TTS, and Facial Animation in UE5**  
+> Powered by **Ollama (LLaMA 3.2)**, **NVIDIA NeMo FastPitch**, and **NVIDIA ACE Audio2Face**.
 
-### Software Requirements 
+<div align="center">
 
-1. Unreal Engine 5.4.4 – Core development platform (≈41.6 GB). Unreal hosts 
-the MetaHuman characters and runs the Audio2Face integration (Live Link / 
-plugin). 
-2. MetaHuman (Default UE5) – Prebuilt high-fidelity character assets and facial 
-rigs.
-3. Ollama / LLaMA 3.2 – Local LLM for NPC dialogue. Ollama is executed via 
-command-line (cmd / PowerShell) and invoked from Python helper scripts 
-(e.g., ollama run <model>) to send prompts and receive JSON responses. 
-4. NVIDIA NeMo FastPitch – TTS synthesis toolchain. NeMo is installed and 
-executed inside WSL2 (Linux) using a Conda environment (required by 
-NeMo), enabling compatibility with Linux-only tooling and model 
-dependencies. The WSL2 instance must have GPU support enabled for 
-accelerated inference. 
-5. NVIDIA ACE / Audio2Face Kairos Template – Audio-to-blendshape service used to generate 
-facial animation from TTS audio. Audio2Face Kairos can be accessed from official website and may require NVIDIA developer 
-access and licensing for authoring microservices. 
-6. Python 3.13 – Host scripts for orchestration, TTS runner wrappers, console 
-logging, and CSV export. Python scripts call Ollama (via cmd) and interact 
-with NeMo in WSL (via subprocess/SSH or by running scripts inside WSL). 
-7. Shell / Command utilities – Windows cmd / PowerShell for launching Ollama 
-and Unreal helper scripts; WSL bash for running Conda/NeMo command
+![UE5](https://img.shields.io/badge/Engine-Unreal%20Engine%205.4-blue?logo=unrealengine)
+![Python](https://img.shields.io/badge/Python-3.13-yellow?logo=python)
+![NVIDIA](https://img.shields.io/badge/NVIDIA-ACE%20%7C%20NeMo-green?logo=nvidia)
+![License](https://img.shields.io/badge/Status-Prototype-orange)
 
-### NVIDIA ACE
+</div>
 
-For details on NVIDIA ACE, please visit the main [ACE documentation website](https://docs.nvidia.com/ace/latest/index.html).
+---
 
-### Kairos Sample Project
+## 📘 Abstract
 
-The documentation for the Kairos Unreal Engine sample project can be found in the ACE documentation as well, please visit [the Kairos section here](https://docs.nvidia.com/ace/latest/workflows/kairos/kairos-unreal-sample-project.html).
+This project presents a **semi-offline AI pipeline** for dynamic, conversational Non-Playable Characters (NPCs) in **Unreal Engine 5**.  
+Instead of relying entirely on cloud APIs, the system focuses on **local text generation**, **local text-to-speech synthesis**, and **real-time facial animation**.
+
+The architecture integrates:
+
+- 🧠 **Ollama-hosted LLaMA 3.2** → Contextual NPC dialogue  
+- 🔊 **NVIDIA NeMo FastPitch (WSL2)** → High-quality, low-latency TTS  
+- 😀 **NVIDIA ACE Audio2Face** → Facial animation & blendshape generation  
+- 🧍 **MetaHuman** → Final in-engine expressive performance  
+
+The final prototype supports **real-time player–NPC conversations** with near-instant speech playback and dynamic facial animation.  
+While LLM and TTS components run fully offline, **Audio2Face remains the main vendor-dependent limitation**, requiring NVIDIA tools and licensing.
+
+This work demonstrates a **feasible hybrid workflow** balancing immersion, privacy, and creative control—while highlighting future opportunities for optimization and localized facial animation.
+
+---
+
+## 🛠️ Software Requirements
+
+| Component | Purpose | Notes |
+|----------|---------|-------|
+| **Unreal Engine 5.4.4** | Core game engine | Hosts MetaHumans + A2F integration |
+| **MetaHuman (UE5)** | High-fidelity character rig | Default UE5 plugin |
+| **Ollama / LLaMA 3.2** | Local LLM for dialogue | Called via Python subprocess (cmd) |
+| **NVIDIA NeMo FastPitch** | TTS engine | Runs in **WSL2**, requires Conda + GPU |
+| **NVIDIA ACE / Audio2Face (Kairos Template)** | Audio→Blendshape | Requires NVIDIA developer access |
+| **Python 3.13** | Pipeline orchestration | Calls Ollama & WSL2 NeMo |
+| **cmd / PowerShell / WSL** | Shell automation | Required for cross-environment workflow |
+
+---
+
+## 📐 Architecture Overview
+
+<div align="center">
+
+<img width="505" height="396" alt="Pipeline Flowchart" src="https://github.com/user-attachments/assets/b44bf4ca-2dcc-4e9d-9c30-003b39319603" />
+
+**Figure 1. Overall Pipeline Architecture**
+
+</div>
+
+### Pipeline Breakdown
+1. **Player Input → UE Blueprint/Python Handler**  
+2. **Prompt sent to Ollama (local LLaMA 3.2)**  
+3. **LLM returns structured JSON response**  
+4. **Python script sends text to NeMo FastPitch (WSL2)**  
+5. **Generated WAV file sent to NVIDIA ACE Audio2Face**  
+6. **Blendshapes streamed to UE5 via Live Link**  
+7. **MetaHuman animates + audio plays in sync**
+
+---
+
+## 🎮 Demo
+
+<div align="center">
+
+<img width="856" height="479" alt="Gameplay Screenshot" src="https://github.com/user-attachments/assets/098168e8-1553-4411-a050-cb9ec62fa5fc" />
+
+**Figure 2. In-game demonstration (UE5 MetaHuman NPC)**
+
+</div>
+
+---
+
+## 📦 Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/<your-repo>/dynamic-ai-npc-ue5.git
+cd dynamic-ai-npc-ue5
+```
+
+### 2. Install Ollama + LLaMA 3.2
+```bash
+winget install Ollama
+ollama pull llama3.2
+```
+
+Test:
+```bash
+ollama run llama3.2
+```
+
+### 3. Install NeMo FastPitch inside WSL2
+```bash
+wsl --install
+```
+
+Inside WSL:
+```bash
+conda create -n nemo python=3.10
+conda activate nemo
+pip install nemo_toolkit['all']
+```
+
+Check GPU support:
+```bash
+nvidia-smi
+```
+
+### 4. Install NVIDIA ACE (Audio2Face Kairos Template)
+Download from:  
+https://docs.nvidia.com/ace/latest/
+
+### 5. Open the UE5 Project
+Enable required plugins:
+
+- Python Editor Script Plugin  
+- MetaHuman  
+- Live Link  
+- Audio2Face / Kairos  
+
+---
+
+## 📁 Project Structure
+```bash
+/ai_pipeline
+    /python
+        dialogue_handler.py
+        ollama_bridge.py
+        tts_fastpitch_wsl.py
+    /audio
+        output.wav
+/kairos
+    A2F_LiveLink.uasset
+/ue5_project
+    Content/
+    Scripts/
+README.md
+```
+
+---
+
+## 🚀 Features
+- ✔ Local LLM dialogue (no cloud)
+- ✔ WSL2-accelerated TTS synthesis
+- ✔ Real-time facial animation via Audio2Face
+- ✔ Fully compatible with MetaHumans
+- ✔ Modular Python pipeline
+
+---
+
+## 📈 Limitations
+- ⚠ Audio2Face requires NVIDIA ecosystem + license
+- ⚠ Real-time performance depends on GPU
+- ⚠ Sync accuracy tied to Live Link
+
+---
+
+## 🔭 Future Work
+- Fully local open-source alternative to Audio2Face
+- Real-time phoneme-based animation (OpenFace / DeepSpeech)
+- UX latency benchmarking
+- Emotion tagging + expressive NPC mood models
+- GPU optimization
+
+---
+
+## 📚 Related Documentation
+**NVIDIA ACE:**  
+https://docs.nvidia.com/ace/latest/index.html  
+
+**Kairos Unreal Sample Project:**  
+https://docs.nvidia.com/ace/latest/workflows/kairos/kairos-unreal-sample-project.html  
+
+---
+
+## 📄 License
+Distributed as a research prototype.  
+NVIDIA ACE components follow their respective licenses.
