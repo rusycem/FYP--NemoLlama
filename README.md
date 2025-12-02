@@ -1,4 +1,4 @@
-# DYNAMIC AI-DRIVEN NPCS WITH REAL-TIME ADAPTIVE CONVERSATIONS IN UNREAL ENGINE 5
+# Dynamic AI-Driven NPCs With Real-Time Adaptive Conversations In Unreal Engine 5
 
 > **Offline / Hybrid AI Pipeline for Fully Reactive NPC Dialogue, TTS, and Facial Animation in UE5**  
 > Powered by **Ollama (LLaMA 3.2)**, **NVIDIA NeMo FastPitch**, and **NVIDIA ACE Audio2Face**.
